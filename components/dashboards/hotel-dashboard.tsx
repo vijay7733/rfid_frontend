@@ -48,6 +48,7 @@ import {
   Battery,
   BatteryWarning,
 } from "lucide-react"
+import { apiService, Hotel, Room } from '@/lib/api'
 
 // Using shared hotel data from lib/hotel-data.ts
 
@@ -392,6 +393,33 @@ export function HotelDashboard({ hotelId, onBackToHotels }: HotelDashboardProps)
     }, 5000)
     return () => clearInterval(interval)
   }, [activities])
+
+  // --- AUTO-REFRESH ALL HOTELS ROOM STATUS ---
+  const [allHotelRooms, setAllHotelRooms] = useState<Record<string, Room[]>>({})
+  const [allHotels, setAllHotels] = useState<Hotel[]>([])
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout
+    const fetchAllHotelsAndRooms = async () => {
+      try {
+        const hotels = await apiService.getHotels()
+        setAllHotels(hotels)
+        const roomsByHotel: Record<string, Room[]> = {}
+        await Promise.all(
+          hotels.map(async (hotel) => {
+            try {
+              const rooms = await apiService.getRooms(hotel.id)
+              roomsByHotel[hotel.id] = rooms
+            } catch {}
+          })
+        )
+        setAllHotelRooms(roomsByHotel)
+      } catch {}
+    }
+    fetchAllHotelsAndRooms()
+    interval = setInterval(fetchAllHotelsAndRooms, 5000)
+    return () => clearInterval(interval)
+  }, [])
 
   // Edit handlers
   const handleEditHotel = () => {

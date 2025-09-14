@@ -11,18 +11,6 @@ export const metadata: Metadata = {
   title: "RFID Hotel Management",
   description: "Mobile-first RFID key card management system for hotels with role-based access control",
   generator: 'v0.dev',
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 5,
-    minimumScale: 0.5,
-    userScalable: true,
-    viewportFit: 'cover',
-  },
-  themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
-    { media: '(prefers-color-scheme: dark)', color: '#202529' }
-  ],
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
@@ -31,6 +19,21 @@ export const metadata: Metadata = {
   formatDetection: {
     telephone: false,
   },
+}
+
+export function generateViewport() {
+  return {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 5,
+    minimumScale: 0.5,
+    userScalable: true,
+    viewportFit: 'cover',
+    themeColor: [
+      { media: '(prefers-color-scheme: light)', color: '#ffffff' },
+      { media: '(prefers-color-scheme: dark)', color: '#202529' }
+    ],
+  }
 }
 
 export default function RootLayout({
